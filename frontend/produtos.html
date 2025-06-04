@@ -1,0 +1,78 @@
+<!-- frontend/produtos.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Meus Produtos</title>
+</head>
+<body>
+    <h2>Gerenciar Produtos</h2>
+
+    <form id="produtoForm">
+        <input type="text" id="nome" placeholder="Nome do produto" required>
+        <input type="number" id="preco" placeholder="Preço" required>
+        <input type="number" id="estoque" placeholder="Quantidade em estoque" required>
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <h3>Meus Produtos</h3>
+    <ul id="listaProdutos"></ul>
+
+    <script>
+        const userId = localStorage.getItem('user_id');
+
+        if (!userId) {
+            alert('Você precisa estar logado');
+            window.location.href = 'login.html';
+        }
+
+        async function listarProdutos() {
+            const res = await fetch('http://127.0.0.1:8000/api/produtos/');
+            const produtos = await res.json();
+            const lista = document.getElementById('listaProdutos');
+            lista.innerHTML = '';
+
+            produtos.forEach(produto => {
+                const li = document.createElement('li');
+                li.textContent = `${produto.nome} - R$ ${produto.preco} - ${produto.estoque} un`;
+
+                const btnDel = document.createElement('button');
+                btnDel.textContent = 'Excluir';
+                btnDel.onclick = () => deletarProduto(produto.id);
+
+                li.appendChild(btnDel);
+                lista.appendChild(li);
+            });
+        }
+
+        async function cadastrarProduto(e) {
+            e.preventDefault();
+
+            const nome = document.getElementById('nome').value;
+            const preco = document.getElementById('preco').value;
+            const estoque = document.getElementById('estoque').value;
+
+            await fetch('http://127.0.0.1:8000/api/produtos/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ nome, preco, estoque })
+            });
+
+            document.getElementById('produtoForm').reset();
+            listarProdutos();
+        }
+
+        async function deletarProduto(id) {
+            await fetch(`http://127.0.0.1:8000/api/produtos/${id}/`, {
+                method: 'DELETE'
+            });
+            listarProdutos();
+        }
+
+        document.getElementById('produtoForm').addEventListener('submit', cadastrarProduto);
+        listarProdutos();
+    </script>
+</body>
+</html>
