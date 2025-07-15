@@ -4,7 +4,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
-from .models import Produto
+from .models import Produto, Perfil
 from .serializers import ProdutoSerializer, UserSerializer
 
 class ProdutoViewSet(viewsets.ModelViewSet):
@@ -23,6 +23,11 @@ def login_view(request):
 
     user = authenticate(username=username, password=password)
     if user:
-        return Response({'message': 'Login realizado com sucesso', 'user_id': user.id})
+        perfil = Perfil.objects.get(user=user)
+        return Response({
+            'message': 'Login realizado com sucesso',
+            'user_id': user.id,
+            'tipo': perfil.tipo
+        })
     else:
         return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_401_UNAUTHORIZED)

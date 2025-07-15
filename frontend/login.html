@@ -1,40 +1,109 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Login</title>
+<meta charset="UTF-8" />
+<title>Login</title>
+<style>
+  body {
+    background-color: #fff8f0;
+    font-family: Arial, sans-serif;
+    color: #6b4a29;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 20px;
+    margin: 0;
+  }
+  h2 {
+    color: #b85c38;
+    font-size: 2em;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 1px #a0522d88;
+  }
+  form {
+    background: #fdf0e9;
+    border-radius: 12px;
+    padding: 30px 40px;
+    box-shadow: 0 4px 12px rgba(184, 92, 56, 0.3);
+    width: 100%;
+    max-width: 400px;
+  }
+  input {
+    width: 100%;
+    padding: 12px 14px;
+    margin: 12px 0;
+    border: 2px solid #d2691e;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+  }
+  input:focus {
+    outline: none;
+    border-color: #c1272d;
+    box-shadow: 0 0 8px #c1272d88;
+  }
+  button {
+    width: 100%;
+    padding: 14px;
+    background-color: #c1272d;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-top: 18px;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #a31f23;
+  }
+  @media (max-width: 450px) {
+    form {
+      padding: 20px;
+    }
+  }
+</style>
 </head>
 <body>
-    <h2>Login</h2>
-    <form id="loginForm">
-        <input type="text" id="username" placeholder="Usuário" required>
-        <input type="password" id="password" placeholder="Senha" required>
-        <button type="submit">Entrar</button>
-    </form>
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="text" id="username" placeholder="Usuário" required />
+    <input type="password" id="password" placeholder="Senha" required />
+    <button type="submit">Entrar</button>
+  </form>
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
 
-            const response = await fetch('http://127.0.0.1:8000/api/login/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            });
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
 
-            if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem('user_id', data.user_id);
-                alert('Login realizado!');
-                window.location.href = "produtos.html";
-            } else {
-                alert('Credenciais inválidas');
-            }
-        });
-    </script>
+      const response = await fetch('http://127.0.0.1:8000/api/login/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('user_id', data.user_id);
+        localStorage.setItem('tipo', data.tipo);
+
+        alert('Login realizado com sucesso!');
+
+        if (data.tipo === 'funcionario') {
+          window.location.href = 'produtos.html';
+        } else if (data.tipo === 'cliente') {
+          window.location.href = 'compras.html';
+        } else {
+          alert('Tipo de usuário inválido.');
+        }
+      } else {
+        alert('Credenciais inválidas.');
+      }
+    });
+  </script>
 </body>
 </html>

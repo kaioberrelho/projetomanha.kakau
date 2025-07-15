@@ -1,78 +1,207 @@
-<!-- frontend/produtos.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Meus Produtos</title>
+  <meta charset="UTF-8" />
+  <title>Gerenciar Produtos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0 20px;
+    }
+
+    header {
+      background-color: #b85c38;
+      color: white;
+      padding: 15px 20px;
+      text-align: right;
+    }
+
+    nav a {
+      margin-left: 15px;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+    }
+
+    h2, h3 {
+      color: #6b4a29;
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    form {
+      background-color: #ffffff;
+      padding: 25px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: 20px auto;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    form input,
+    form select,
+    form button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #d2691e;
+      font-size: 16px;
+    }
+
+    form input:focus,
+    form select:focus {
+      border-color: #c1272d;
+      outline: none;
+    }
+
+    form button {
+      background-color: #c1272d;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    form button:hover {
+      background-color: #a31f23;
+    }
+
+    #listaProdutos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .produto-card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .produto-img {
+      width: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .produto-card button {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .produto-card button:hover {
+      background-color: #c0392b;
+    }
+  </style>
 </head>
 <body>
-    <h2>Gerenciar Produtos</h2>
 
-    <form id="produtoForm">
-        <input type="text" id="nome" placeholder="Nome do produto" required>
-        <input type="number" id="preco" placeholder="Preço" required>
-        <input type="number" id="estoque" placeholder="Quantidade em estoque" required>
-        <button type="submit">Cadastrar</button>
-    </form>
+<header>
+  <nav>
+    <a href="compras.html">Ver Produtos</a>
+    <a href="login.html">Sair</a>
+  </nav>
+</header>
 
-    <h3>Meus Produtos</h3>
-    <ul id="listaProdutos"></ul>
+<h2>Gerenciar Produtos</h2>
 
-    <script>
-        const userId = localStorage.getItem('user_id');
+<form id="produtoForm" enctype="multipart/form-data">
+  <input type="text" id="nome" name="nome" placeholder="Nome do produto" required />
+  <input type="number" id="preco" name="preco" placeholder="Preço" required step="0.01" />
+  <input type="number" id="estoque" name="estoque" placeholder="Estoque" required />
+  <input type="file" id="imagem" name="imagem" accept="image/*" />
+  <select id="tipo" name="tipo" required>
+    <option value="">Selecione o tipo</option>
+    <option value="frios">Frios</option>
+    <option value="paes">Pães</option>
+    <option value="bebidas">Bebidas</option>
+    <option value="doces">Doces</option>
+    <option value="outros">Outros</option>
+  </select>
+  <button type="submit">Cadastrar Produto</button>
+</form>
 
-        if (!userId) {
-            alert('Você precisa estar logado');
-            window.location.href = 'login.html';
-        }
+<h3>Produtos Cadastrados</h3>
+<ul id="listaProdutos"></ul>
 
-        async function listarProdutos() {
-            const res = await fetch('http://127.0.0.1:8000/api/produtos/');
-            const produtos = await res.json();
-            const lista = document.getElementById('listaProdutos');
-            lista.innerHTML = '';
+<script>
+  const userId = localStorage.getItem('user_id');
+  const tipo = localStorage.getItem('tipo');
 
-            produtos.forEach(produto => {
-                const li = document.createElement('li');
-                li.textContent = `${produto.nome} - R$ ${produto.preco} - ${produto.estoque} un`;
+  if (!userId) {
+    alert('Você precisa estar logado');
+    window.location.href = 'login.html';
+  } else if (tipo !== 'funcionario') {
+    alert('Acesso restrito!');
+    window.location.href = 'compras.html';
+  }
 
-                const btnDel = document.createElement('button');
-                btnDel.textContent = 'Excluir';
-                btnDel.onclick = () => deletarProduto(produto.id);
+  async function listarProdutos() {
+    const res = await fetch('http://127.0.0.1:8000/api/produtos/');
+    const produtos = await res.json();
+    const lista = document.getElementById('listaProdutos');
+    lista.innerHTML = '';
 
-                li.appendChild(btnDel);
-                lista.appendChild(li);
-            });
-        }
+    produtos.forEach(produto => {
+      const li = document.createElement('li');
+      li.classList.add('produto-card');
 
-        async function cadastrarProduto(e) {
-            e.preventDefault();
+      const imgSrc = produto.imagem
+        ? (produto.imagem.startsWith('http') ? produto.imagem : `http://127.0.0.1:8000${produto.imagem}`)
+        : null;
 
-            const nome = document.getElementById('nome').value;
-            const preco = document.getElementById('preco').value;
-            const estoque = document.getElementById('estoque').value;
+      li.innerHTML = `
+        <strong>${produto.nome}</strong><br>
+        R$ ${produto.preco} - ${produto.estoque} un<br>
+        ${imgSrc ? `<img src="${imgSrc}" class="produto-img">` : ''}
+      `;
 
-            await fetch('http://127.0.0.1:8000/api/produtos/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ nome, preco, estoque })
-            });
+      const btnDel = document.createElement('button');
+      btnDel.textContent = 'Excluir';
+      btnDel.onclick = () => deletarProduto(produto.id);
+      li.appendChild(btnDel);
+      lista.appendChild(li);
+    });
+  }
 
-            document.getElementById('produtoForm').reset();
-            listarProdutos();
-        }
+  async function cadastrarProduto(e) {
+    e.preventDefault();
+    const form = document.getElementById('produtoForm');
+    const formData = new FormData(form);
 
-        async function deletarProduto(id) {
-            await fetch(`http://127.0.0.1:8000/api/produtos/${id}/`, {
-                method: 'DELETE'
-            });
-            listarProdutos();
-        }
+    await fetch('http://127.0.0.1:8000/api/produtos/', {
+      method: 'POST',
+      body: formData
+    });
 
-        document.getElementById('produtoForm').addEventListener('submit', cadastrarProduto);
-        listarProdutos();
-    </script>
+    form.reset();
+    listarProdutos();
+  }
+
+  async function deletarProduto(id) {
+    await fetch(`http://127.0.0.1:8000/api/produtos/${id}/`, {
+      method: 'DELETE'
+    });
+    listarProdutos();
+  }
+
+  document.getElementById('produtoForm').addEventListener('submit', cadastrarProduto);
+  listarProdutos();
+</script>
+
 </body>
 </html>

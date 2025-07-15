@@ -4,10 +4,80 @@
 <head>
     <meta charset="UTF-8">
     <title>Bem-vindo</title>
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #fff8f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            margin-top: 40px;
+            color: #b85c38;
+            font-size: 2.5em;
+        }
+
+        .button-container {
+            margin: 20px 0;
+        }
+
+        .button-container a {
+            display: inline-block;
+            text-decoration: none;
+            background-color: #d2691e;
+            color: white;
+            padding: 12px 24px;
+            margin: 0 10px 20px 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            min-width: 180px;
+        }
+
+        .button-container a:hover {
+            background-color: #a0522d;
+        }
+
+        .descricao {
+            color: #6b4a29;
+            font-style: italic;
+            margin-bottom: 20px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 0.9em;
+        }
+
+        .image-container {
+            margin-top: 20px;
+        }
+
+        .image-container img {
+            max-width: 90%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
 <body>
-    <h1>Bem-vindo à aplicação Django</h1>
-    <a href="cadastro.html">Cadastrar</a> | <a href="login.html">Login</a>
+    <h1>Padaria Loucos Por Pães</h1>
+
+    <div class="button-container">
+        <a href="cadastro_cliente.html">Cadastrar Cliente</a>
+        <a href="cadastro_funcionario.html">Cadastrar Funcionário</a>
+        <a href="login.html">Login</a>
+    </div>
+
+    <div class="descricao">
+        <p><strong>Cadastrar Cliente:</strong> Para criar uma conta e realizar compras na padaria.</p>
+        <p><strong>Cadastrar Funcionário:</strong> Para acessar o painel de gerenciamento dos produtos.</p>
+    </div>
+
+    <div class="image-container">
+        <img src="imagens/projeto padaria.jpeg" alt="Foto da Padaria">
+    </div>
 </body>
 </html>

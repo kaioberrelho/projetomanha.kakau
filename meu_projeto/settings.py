@@ -136,11 +136,11 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 import os
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend"),
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5500",  # se estiver rodando frontend com python -m http.server 5500
-]
+CORS_ALLOW_ALL_ORIGINS = True
