@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<title>Redefinir Senha</title>
+<style>
+  body {
+    background-color: #fff8f0;
+    font-family: Arial, sans-serif;
+    color: #6b4a29;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 20px;
+    margin: 0;
+  }
+  h2 {
+    color: #b85c38;
+    font-size: 2em;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 1px #a0522d88;
+  }
+  form {
+    background: #fdf0e9;
+    border-radius: 12px;
+    padding: 30px 40px;
+    box-shadow: 0 4px 12px rgba(184, 92, 56, 0.3);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+  input {
+    width: 100%;
+    padding: 12px 14px;
+    margin: 12px 0;
+    border: 2px solid #d2691e;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+  }
+  input:focus {
+    outline: none;
+    border-color: #c1272d;
+    box-shadow: 0 0 8px #c1272d88;
+  }
+  button {
+    width: 100%;
+    padding: 14px;
+    background-color: #c1272d;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-top: 18px;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #a31f23;
+  }
+</style>
+</head>
+<body>
+  <h2>Redefinir Senha</h2>
+  <form id="resetForm">
+    <input type="email" id="email" placeholder="Digite seu e-mail" required />
+    <button type="submit">Enviar link de redefinição</button>
+  </form>
+
+  <script>
+    document.getElementById('resetForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+
+      // Aqui você faria a requisição para sua API/backend que envia o email de reset
+      // Exemplo genérico:
+      try {
+        const res = await fetch('http://127.0.0.1:8000/api/reset-password/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+
+        if (res.ok) {
+          alert('Um link de redefinição foi enviado para seu e-mail, verifique sua caixa de entrada.');
+          window.location.href = 'login.html';
+        } else {
+          alert('Erro ao enviar o link. Verifique o e-mail e tente novamente.');
+        }
+      } catch (err) {
+        alert('Erro na comunicação com o servidor.');
+      }
+    });
+  </script>
+</body>
+</html>

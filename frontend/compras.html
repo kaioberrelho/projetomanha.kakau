@@ -80,6 +80,7 @@
 <body>
 <header>
   <nav>
+    <a href="carrinho.html">Carrinho</a>
     <a href="produtos.html">Painel</a>
     <a href="login.html">Sair</a>
   </nav>
@@ -120,26 +121,35 @@
   }
 
   function renderizarProdutos(produtos) {
-    const lista = document.getElementById('listaCompras');
-    lista.innerHTML = '';
+  const lista = document.getElementById('listaCompras');
+  lista.innerHTML = '';
 
-    produtos.forEach(produto => {
-      const li = document.createElement('li');
-      li.classList.add('produto-card');
+  produtos.forEach(produto => {
+    const li = document.createElement('li');
+    li.classList.add('produto-card');
 
-      const imgSrc = produto.imagem
-        ? (produto.imagem.startsWith('http') ? produto.imagem : `http://127.0.0.1:8000${produto.imagem}`)
-        : null;
+    const imgSrc = produto.imagem
+      ? (produto.imagem.startsWith('http') ? produto.imagem : `http://127.0.0.1:8000${produto.imagem}`)
+      : null;
 
-      li.innerHTML = `
-        <strong>${produto.nome}</strong><br>
-        R$ ${parseFloat(produto.preco).toFixed(2)}<br>
-        Tipo: ${produto.tipo}
-        ${imgSrc ? `<br><img src="${imgSrc}" class="produto-img">` : ''}
-      `;
+    li.innerHTML = `
+      <strong>${produto.nome}</strong><br>
+      R$ ${parseFloat(produto.preco).toFixed(2)}<br>
+      Tipo: ${produto.tipo}
+      ${imgSrc ? `<br><img src="${imgSrc}" class="produto-img">` : ''}
+      <br><button onclick='adicionarAoCarrinho(${JSON.stringify(produto)})'>Adicionar ao Carrinho</button>
+    `;
 
-      lista.appendChild(li);
-    });
+    lista.appendChild(li);
+  });
+}
+
+  function adicionarAoCarrinho(produto) {
+  const userId = localStorage.getItem('user_id');
+  let carrinho = JSON.parse(localStorage.getItem(`carrinho_${userId}`)) || [];
+  carrinho.push(produto);
+  localStorage.setItem(`carrinho_${userId}`, JSON.stringify(carrinho));
+  alert(`"${produto.nome}" foi adicionado ao carrinho!`);
   }
 
   listarTodos();

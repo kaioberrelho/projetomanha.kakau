@@ -14,12 +14,14 @@
     padding: 50px 20px;
     margin: 0;
   }
+
   h2 {
     color: #b85c38;
     font-size: 2em;
     margin-bottom: 30px;
     text-shadow: 1px 1px 1px #a0522d88;
   }
+
   form {
     background: #fdf0e9;
     border-radius: 12px;
@@ -28,6 +30,7 @@
     width: 100%;
     max-width: 400px;
   }
+
   input {
     width: 100%;
     padding: 12px 14px;
@@ -37,11 +40,13 @@
     font-size: 1em;
     transition: border-color 0.3s ease;
   }
+
   input:focus {
     outline: none;
     border-color: #c1272d;
     box-shadow: 0 0 8px #c1272d88;
   }
+
   button {
     width: 100%;
     padding: 14px;
@@ -55,9 +60,27 @@
     margin-top: 18px;
     transition: background-color 0.3s ease;
   }
+
   button:hover {
     background-color: #a31f23;
   }
+
+  .cadastro-links {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.9em;
+  }
+
+  .cadastro-links a {
+    color: #b85c38;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .cadastro-links a:hover {
+    text-decoration: underline;
+  }
+
   @media (max-width: 450px) {
     form {
       padding: 20px;
@@ -71,6 +94,14 @@
     <input type="text" id="username" placeholder="Usuário" required />
     <input type="password" id="password" placeholder="Senha" required />
     <button type="submit">Entrar</button>
+
+    <div class="cadastro-links">
+      <p>Não tem conta? <a href="cadastro_cliente.html">Cadastre-se como cliente</a></p>
+      <p>Não tem conta? <a href="cadastro_funcionario.html">Cadastre-se como funcionário</a></p>
+      <p style="text-align:center; margin-top:10px;">
+        <a href="esqueci_senha.html" style="color:#b85c38; font-weight:bold; text-decoration:none;">Esqueceu a senha?</a>
+      </p>
+    </div>
   </form>
 
   <script>
